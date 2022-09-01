@@ -10,7 +10,7 @@ data class SessionResponse(
 
 @JsonClass(generateAdapter = true)
 data class SessionData(
-    @Json(name = "sessions") var sessions: List<Session?>?
+    @Json(name = "sessions") var sessions: List<Session>?
 )
 
 @JsonClass(generateAdapter = true)
