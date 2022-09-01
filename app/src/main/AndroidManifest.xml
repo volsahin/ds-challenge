@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tinyfalcon.dschallenge">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".DsChallengeApplication"
         android:allowBackup="true"
