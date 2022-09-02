@@ -1,10 +1,10 @@
 package com.tinyfalcon.dschallenge.feature.home.presentation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.tinyfalcon.dschallenge.R
@@ -35,8 +35,6 @@ class HomeFragment : Fragment() {
         binding?.buttonFirst?.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
-
-        viewModel.getSessions()
     }
 
     override fun onDestroyView() {
