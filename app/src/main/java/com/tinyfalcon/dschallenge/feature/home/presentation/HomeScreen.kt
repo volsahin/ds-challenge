@@ -1,6 +1,7 @@
 package com.tinyfalcon.dschallenge.feature.home.presentation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -16,28 +17,30 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import com.tinyfalcon.dschallenge.R
 import com.tinyfalcon.dschallenge.feature.home.data.PageLoadingState
 import com.tinyfalcon.dschallenge.feature.home.domain.SessionViewEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun SessionsScreen(
+fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val lazySessionItems = viewModel.notificationsFlow.collectAsLazyPagingItems()
-
     Column {
         Column(
             modifier = Modifier
@@ -45,6 +48,7 @@ fun SessionsScreen(
                 .background(DsGray)
         ) {
             DiscoverText()
+            // TODO Box
             Row(
                 modifier = Modifier.padding(
                     start = 16.dp,
@@ -56,7 +60,7 @@ fun SessionsScreen(
                 SearchView(viewModel, viewModel.loadingState)
             }
         }
-        SessionList(lazySessionItems)
+        SessionList(viewModel.notificationsFlow)
     }
 }
 
@@ -75,20 +79,22 @@ private val span: (LazyGridItemSpanScope) -> GridItemSpan = { GridItemSpan(2) }
 
 @Composable
 fun SessionList(
-    lazySessionItems: LazyPagingItems<SessionViewEntity>
+    lazySessionItems: Flow<PagingData<SessionViewEntity>>
 ) {
+    val lazyPagingItems = lazySessionItems.collectAsLazyPagingItems()
+
     LazyVerticalGrid(
         modifier = Modifier.padding(16.dp),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(lazySessionItems.itemCount) { index ->
-            lazySessionItems[index]?.let {
+        items(lazyPagingItems.itemCount) { index ->
+            lazyPagingItems[index]?.let {
                 SessionItem(session = it)
             }
         }
-        renderLoading(lazySessionItems.loadState)
+        renderLoading(lazyPagingItems.loadState)
     }
 }
 
@@ -135,7 +141,7 @@ fun SessionItem(session: SessionViewEntity) {
         val imageWidth = remember { mutableStateOf(0) }
         val imageHeight = remember { mutableStateOf(0) }
 
-        Box {
+        Box(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
                 modifier = Modifier
                     .matchParentSize()
@@ -167,6 +173,26 @@ fun SessionItem(session: SessionViewEntity) {
             ) {
                 SessionItemTextPart(session)
             }
+            CountItem(this, session.listenerCount ?: 0)
+        }
+    }
+}
+
+@Composable
+fun CountItem(boxScope: BoxScope, listenerCount: Int) {
+    boxScope.run {
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.TopStart)
+                .background(shape = RoundedCornerShape(8.dp), color = Color(0xAAFFFFFF))
+        ) {
+            Image(
+                modifier = Modifier.padding(2.dp),
+                painter = painterResource(id = R.drawable.ic_baseline_headset_24),
+                contentDescription = "Counter"
+            )
+            Text(modifier = Modifier.padding(top = 2.dp, bottom = 2.dp, end = 2.dp), text = listenerCount.toString(), fontSize = 10.sp)
         }
     }
 }
@@ -200,6 +226,7 @@ fun ProgressIndicator(loadingState: StateFlow<PageLoadingState>) {
     }
 }
 
+// TODO move to another file
 private val DsGray = Color(0xff1e1e1e)
 private val DsLightGray = Color(0xff333336)
 private val Yellow200 = Color(0xffffeb46)
