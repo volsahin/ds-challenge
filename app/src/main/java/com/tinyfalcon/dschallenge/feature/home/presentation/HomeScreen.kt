@@ -21,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,25 +41,20 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Column {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(DsGray)
-        ) {
-            DiscoverText()
-            // TODO Box
-            Row(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 12.dp,
-                    top = 16.dp
-                )
-            ) {
-                SearchView(viewModel, viewModel.loadingState)
-            }
-        }
-        SessionList(viewModel.notificationsFlow)
+        DiscoverAndSearchArea(viewModel = viewModel)
+        SessionList(lazySessionItems = viewModel.sessionItemsFlow)
+    }
+}
+
+@Composable
+fun DiscoverAndSearchArea(viewModel: HomeViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(DsGray)
+    ) {
+        DiscoverText()
+        SearchArea(viewModel = viewModel)
     }
 }
 
@@ -72,6 +66,40 @@ fun DiscoverText() {
         color = Color.White,
         style = MaterialTheme.typography.h4,
         fontWeight = FontWeight.Bold
+    )
+}
+
+@Composable
+fun SearchArea(viewModel: HomeViewModel) {
+    Row(
+        modifier = Modifier.padding(
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 12.dp,
+            top = 16.dp
+        )
+    ) {
+        SearchView(viewModel)
+    }
+}
+
+@Composable
+fun SearchView(viewModel: HomeViewModel) {
+    val searchText by viewModel.searchText.collectAsState()
+    viewModel.searchTextToQuery.collectAsState("")
+
+    TextField(
+        modifier = Modifier
+            .background(DsLightGray)
+            .fillMaxWidth(),
+        value = searchText,
+        onValueChange = {
+            viewModel.searchText.value = it
+        },
+        placeholder = { Text("Search", color = Color.White) },
+        leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.Yellow) },
+        trailingIcon = { ProgressIndicator(viewModel.loadingState) },
+        colors = TextFieldDefaults.textFieldColors(textColor = Color.White),
     )
 }
 
@@ -112,27 +140,6 @@ private fun LazyGridScope.renderLoading(loadState: CombinedLoadStates) {
 }
 
 @Composable
-fun SearchView(viewModel: HomeViewModel, loadingState: StateFlow<PageLoadingState>) {
-
-    val searchText by viewModel.searchText.collectAsState()
-    val dbText by viewModel.searchTextToQuery.collectAsState("Empty Result")
-
-    TextField(
-        modifier = Modifier
-            .background(DsLightGray)
-            .fillMaxWidth(),
-        value = searchText,
-        onValueChange = {
-            viewModel.searchText.value = it
-        },
-        placeholder = { Text("Search", color = Color.White) },
-        leadingIcon = { Icon(Icons.Filled.Search, null, tint = Color.Yellow) },
-        trailingIcon = { ProgressIndicator(loadingState) },
-        colors = TextFieldDefaults.textFieldColors(textColor = Color.White),
-    )
-}
-
-@Composable
 fun SessionItem(session: SessionViewEntity) {
     Card(
         modifier = Modifier.fillMaxSize(),
@@ -163,7 +170,7 @@ fun SessionItem(session: SessionViewEntity) {
                             endY = imageHeight.value.toFloat()
                         )
                     )
-            ) {}
+            )
             Column(
                 modifier = Modifier
                     .height(200.dp)

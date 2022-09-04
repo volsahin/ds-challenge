@@ -53,7 +53,7 @@ class HomeViewModel
         mediator
     }
 
-    val notificationsFlow =
+    val sessionItemsFlow =
         Pager(PagingConfig(PAGE_SIZE), pagingSourceFactory = pagingSourceFactory).flow.cachedIn(
             viewModelScope
         )
