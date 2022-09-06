@@ -5,7 +5,7 @@ data class MusicSessionViewEntity(
 )
 
 data class SessionDataViewEntity(
-    val sessions: List<SessionViewEntity>?
+    var sessions: List<SessionViewEntity>?
 )
 
 data class SessionViewEntity(
@@ -19,4 +19,3 @@ data class TrackViewEntity(
     val title: String? = null,
     val artworkUrl: String? = null
 )
-

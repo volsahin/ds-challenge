@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.tinyfalcon.dschallenge.feature.home.presentation.HomeScreen
-import com.tinyfalcon.dschallenge.feature.home.presentation.MyTheme
+import com.tinyfalcon.dschallenge.style.MyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                Box(modifier = Modifier
+                Box(
+                    modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Black)
                 ) {

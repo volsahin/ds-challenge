@@ -26,4 +26,3 @@ data class Track(
     @Json(name = "title") val title: String? = null,
     @Json(name = "artwork_url") val artworkUrl: String? = null
 )
-

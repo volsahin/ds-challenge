@@ -2,6 +2,7 @@ package com.tinyfalcon.dschallenge.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tinyfalcon.dschallenge.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +37,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRetrofit(client: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
-        .baseUrl("https://www.mocky.io/v2/")
+        .baseUrl(BuildConfig.BASE_URL)
         .client(client)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()

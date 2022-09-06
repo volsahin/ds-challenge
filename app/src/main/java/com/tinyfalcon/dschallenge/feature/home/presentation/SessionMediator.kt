@@ -6,11 +6,9 @@ import androidx.paging.PagingState
 import com.tinyfalcon.dschallenge.feature.home.data.PageLoadingState
 import com.tinyfalcon.dschallenge.feature.home.data.PageState
 import com.tinyfalcon.dschallenge.feature.home.domain.GetSessions
-import com.tinyfalcon.dschallenge.feature.home.domain.MusicSessionViewEntity
 import com.tinyfalcon.dschallenge.feature.home.domain.SearchSessions
 import com.tinyfalcon.dschallenge.feature.home.domain.SessionViewEntity
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @ExperimentalPagingApi
@@ -19,11 +17,12 @@ class SessionMediator @Inject constructor(
     private val getSessions: GetSessions,
     private val searchSessions: SearchSessions,
     private val onPageLoad: (PageLoadingState) -> (Unit)
-): PagingSource<Int, SessionViewEntity>() {
+) : PagingSource<Int, SessionViewEntity>() {
 
     companion object {
         private const val FIRST_PAGE = 1
         private const val PAGING_LIMIT = 5
+        private const val RESPONSE_DELAY = 0L
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SessionViewEntity> {
@@ -31,13 +30,14 @@ class SessionMediator @Inject constructor(
 
         onPageLoad(PageLoadingState.LOADING)
 
-        val sessionViewEntity: MusicSessionViewEntity = if (currentPageState == PageState.LIST) {
-            getSessions.execute()
-        } else {
-            searchSessions.execute()
-        }
+        val sessionViewEntity =
+            if (currentPageState == PageState.LIST) {
+                getSessions.execute(GetSessions.Params())
+            } else {
+                searchSessions.execute(SearchSessions.Params())
+            }
 
-        delay(600)
+        delay(RESPONSE_DELAY)
 
         onPageLoad(PageLoadingState.READY)
 
@@ -49,7 +49,6 @@ class SessionMediator @Inject constructor(
             )
         }
 
-        // TODO
         return LoadResult.Error(IllegalArgumentException())
     }
 

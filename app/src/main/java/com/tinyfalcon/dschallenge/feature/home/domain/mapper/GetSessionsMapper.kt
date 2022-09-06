@@ -7,7 +7,7 @@ import com.tinyfalcon.dschallenge.feature.home.domain.SessionViewEntity
 import com.tinyfalcon.dschallenge.feature.home.domain.TrackViewEntity
 import javax.inject.Inject
 
-class GetSessionsMapper @Inject constructor(): SessionMapper {
+class GetSessionsMapper @Inject constructor() : SessionMapper {
     override fun map(sessionResponse: SessionResponse?): MusicSessionViewEntity {
         val sessionsViewEntity = mutableListOf<SessionViewEntity>()
         sessionResponse?.data?.sessions?.forEach {
