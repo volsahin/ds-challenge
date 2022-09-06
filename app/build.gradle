@@ -76,6 +76,7 @@ android {
 
 dependencies {
 
+
     ktlint("com.pinterest:ktlint:0.47.0") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
@@ -97,6 +98,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
 
     // Dagger
+    // TODO : For simplicity I left version numbers here, I usually define them like hilt_version
     implementation("com.google.dagger:hilt-android:${project.hilt_version}")
     kapt("com.google.dagger:hilt-android-compiler:${project.hilt_version}")
 
