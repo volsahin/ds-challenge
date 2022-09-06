@@ -22,7 +22,7 @@ class SessionMediator @Inject constructor(
     companion object {
         private const val FIRST_PAGE = 1
         private const val PAGING_LIMIT = 5
-        private const val RESPONSE_DELAY = 0L
+        private const val RESPONSE_DELAY = 200L
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SessionViewEntity> {

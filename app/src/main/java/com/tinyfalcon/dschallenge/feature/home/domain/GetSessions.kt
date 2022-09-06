@@ -1,14 +1,15 @@
 package com.tinyfalcon.dschallenge.feature.home.domain
 
+import com.tinyfalcon.dschallenge.base.CoroutineDispatcherProvider
 import com.tinyfalcon.dschallenge.base.UseCase
 import com.tinyfalcon.dschallenge.feature.home.MapperModule.GetSessionMapper
 import com.tinyfalcon.dschallenge.feature.home.data.MusicService
 import com.tinyfalcon.dschallenge.feature.home.domain.mapper.SessionMapper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetSessions @Inject constructor(
+    private val dispatcherProvider: CoroutineDispatcherProvider,
     private val service: MusicService,
     @GetSessionMapper private val sessionMapper: SessionMapper
 ) : UseCase<MusicSessionViewEntity, GetSessions.Params>() {
@@ -17,7 +18,7 @@ class GetSessions @Inject constructor(
         private const val API_ID = "5df79b1f320000f4612e011e"
     }
 
-    override suspend fun execute(params: Params): MusicSessionViewEntity = withContext(Dispatchers.IO) {
+    override suspend fun execute(params: Params): MusicSessionViewEntity = withContext(dispatcherProvider.io) {
         val sessions = service.getSessions(params.apiId)
         sessionMapper.map(sessions)
     }

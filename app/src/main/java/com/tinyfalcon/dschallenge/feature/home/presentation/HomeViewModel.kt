@@ -25,7 +25,7 @@ class HomeViewModel
 ) : ViewModel() {
     companion object {
         private const val PAGE_SIZE = 10
-        private const val DEBOUNCE_MILLIS = 600L
+        private const val DEBOUNCE_MILLIS = 700L
     }
 
     private val _loadingState = MutableStateFlow(PageLoadingState.LOADING)

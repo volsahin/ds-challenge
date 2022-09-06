@@ -9,10 +9,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SearchSessions @Inject constructor(
-    val dispatcherProvider: CoroutineDispatcherProvider,
+    private val dispatcherProvider: CoroutineDispatcherProvider,
     private val service: MusicService,
     @SearchMapper private val sessionMapper: SessionMapper
-    // private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UseCase<MusicSessionViewEntity?, SearchSessions.Params>() {
 
     companion object {
