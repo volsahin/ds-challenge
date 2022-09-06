@@ -5,7 +5,7 @@ ktlint and detekt implementation
 
 added a sample unit test -> SearchSessionTest
 
-if you want to see progress icon's clearly you can change delay in
+if you want to see progress icon clearly you can change delay in
 
 com.tinyfalcon.dschallenge.feature.home.presentation.SessionMediator -> RESPONSE_DELAY which is 200ms right now
 
