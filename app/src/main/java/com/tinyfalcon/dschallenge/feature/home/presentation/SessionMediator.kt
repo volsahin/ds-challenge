@@ -6,6 +6,7 @@ import androidx.paging.PagingState
 import com.tinyfalcon.dschallenge.feature.home.data.PageLoadingState
 import com.tinyfalcon.dschallenge.feature.home.data.PageState
 import com.tinyfalcon.dschallenge.feature.home.domain.GetSessions
+import com.tinyfalcon.dschallenge.feature.home.domain.MusicSessionViewEntity
 import com.tinyfalcon.dschallenge.feature.home.domain.SearchSessions
 import com.tinyfalcon.dschallenge.feature.home.domain.SessionViewEntity
 import kotlinx.coroutines.delay
@@ -30,12 +31,19 @@ class SessionMediator @Inject constructor(
 
         onPageLoad(PageLoadingState.LOADING)
 
-        val sessionViewEntity =
-            if (currentPageState == PageState.LIST) {
-                getSessions.execute(GetSessions.Params())
-            } else {
-                searchSessions.execute(SearchSessions.Params())
-            }
+        val sessionViewEntity: MusicSessionViewEntity?
+        try {
+            sessionViewEntity =
+                if (currentPageState == PageState.LIST) {
+                    getSessions.execute(GetSessions.Params())
+                } else {
+                    searchSessions.execute(SearchSessions.Params())
+                }
+        } catch (e: Exception) {
+            // This is for simplicity, We can check IOException, HttpException etc.
+            // We can also inform ui about error
+            return LoadResult.Error(e)
+        }
 
         delay(RESPONSE_DELAY)
 
